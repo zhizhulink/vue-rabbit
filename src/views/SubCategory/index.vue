@@ -1,9 +1,8 @@
 <script setup>
-// import { getCategoryFilterAPI,getSubCategoryAPI } from '@/apis/category'
-import { getCategoryFilterAPI} from '@/apis/category'
+import { getCategoryFilterAPI,getSubCategoryAPI } from '@/apis/category'
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-// import GoodsItem from '../Home/components/GoodsItem.vue';
+import GoodsItem from '../Home/components/GoodsItem.vue';
 // 获取面包屑导航数据
 const route = useRoute()
 const categoryData = ref({})
@@ -14,20 +13,20 @@ const getCategoryData = async () => {
 onMounted(()=>getCategoryData()) 
 
 // 获取基础列表数据渲染
-// const goodList = ref([])
-// const reqData = ref({
-//   categoryId:route.params.id,
-//   page:1,
-//   pageSize:20,
-//   sortField:'publishTime'
-// })
-// const getGoodList = async() => {
-//   const res = await getSubCategoryAPI(reqData.value)
-//   console.log(res)
-//   goodList.value = res.result.items
-// }
+const goodList = ref([])
+const reqData = ref({
+  categoryId:route.params.id,
+  page:1,
+  pageSize:20,
+  sortField:'publishTime'
+})
+const getGoodList = async() => {
+  const res = await getSubCategoryAPI(reqData.value)
+  console.log(res)
+  goodList.value = res.result.items
+}
 
-// onMounted(()=>getGoodList())
+onMounted(()=>getGoodList())
 </script>
 
 <template>
@@ -42,15 +41,14 @@ onMounted(()=>getCategoryData())
       </el-breadcrumb>
     </div>
     <div class="sub-container">
-      <!-- <el-tabs v-model="reqData.sortField" @tab-change="tabChange"> -->
-      <el-tabs>
+      <el-tabs v-model="reqData.sortField" @tab-change="tabChange">
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
       </el-tabs>
       <div class="body" v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
         <!-- 商品列表-->
-        <!-- <GoodsItem v-for="goods in goodList" :goods="goods" :key="goods.id" /> -->
+        <GoodsItem v-for="goods in goodList" :goods="goods" :key="goods.id" />
       </div>
     </div>
   </div>
