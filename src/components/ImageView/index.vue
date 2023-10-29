@@ -75,7 +75,7 @@ watch([elementX, elementY,isOutside], () => {
     <!-- 放大镜大图 -->
     <div class="large" v-show="!isOutside" :style="[
       {
-        backgroundImage: `url(${imageList[0]})`,
+        backgroundImage: `url(${imageList[activeIndex]})`,
         backgroundPositionX: `${positionX}px`,
         backgroundPositionY: `${positionY}px`,
       },
