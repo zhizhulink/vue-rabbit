@@ -19,22 +19,31 @@ const enterhandle = (i) => {
 // 2、获取鼠标相对位置
 const left = ref(0)
 const top = ref(0)
+const positionX = ref(0)
+const positionY = ref(0)
 const target = ref(null)
 const { elementX, elementY, isOutside } = useMouseInElement(target)
-watch([elementX, elementY], () => {
+watch([elementX, elementY,isOutside], () => {
   console.log('xy变化了')
-  if (elementX.value > 100 && elementX.value < 300 ){
+
+  if(isOutside.value) return
+  console.log('执行后续操作')
+  if (elementX.value > 100 && elementX.value < 300) {
     left.value = elementX.value - 100
   }
-  if( elementY.value > 100 && elementY.value < 300) {
-      top.value = elementY.value - 100
+  if (elementY.value > 100 && elementY.value < 300) {
+    top.value = elementY.value - 100
   }
 
-  if (elementX.value > 300) {left.value = 200}
-  if(elementX.value < 100){left.value = 0}
-  if(elementY.value > 300){top.value = 200}
-  if(elementY.value < 100){top.value = 0}
+  if (elementX.value > 300) { left.value = 200 }
+  if (elementX.value < 100) { left.value = 0 }
+  if (elementY.value > 300) { top.value = 200 }
+  if (elementY.value < 100) { top.value = 0 }
+
+  positionX.value = -left.value * 2
+  positionY.value = -top.value * 2
 })
+
 
 </script>
 
@@ -43,10 +52,10 @@ watch([elementX, elementY], () => {
   {{ elementX }},{{ elementY }},{{ isOutside }}
   <div class="goods-image">
     <!-- 左侧大图-->
-    <div class="middle"  ref="target">
+    <div class="middle" ref="target">
       <img :src="imageList[activeIndex]" alt="" />
-      <!-- 蒙层小滑块 --> 
-      <div class="layer" :style="{ left: `${left}px`, top: `${top}px` }"></div>
+      <!-- 蒙层小滑块 -->
+      <div class="layer" v-show="!isOutside" :style="{ left: `${left}px`, top: `${top}px` }"></div>
     </div>
     <!-- 小图列表 -->
     <ul class="small">
@@ -55,13 +64,13 @@ watch([elementX, elementY], () => {
       </li>
     </ul>
     <!-- 放大镜大图 -->
-    <div class="large" :style="[
+    <div class="large" v-show="!isOutside" :style="[
       {
         backgroundImage: `url(${imageList[0]})`,
-        backgroundPositionX: `0px`,
-        backgroundPositionY: `0px`,
+        backgroundPositionX: `${positionX}px`,
+        backgroundPositionY: `${positionY}px`,
       },
-    ]" v-show="false"></div>
+    ]"></div>
   </div>
 </template>
 
