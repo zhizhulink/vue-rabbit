@@ -1,5 +1,10 @@
 <script setup>
+import { loginAPI } from '@/apis/user'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/el-message.css'
+const router = useRouter()
 const form = ref({
     account: '',
     password: '',
@@ -20,9 +25,9 @@ const rules = {
                 console.log(value)
                 // 自定义校验逻辑
                 // 勾选就通过 不勾选就不通过
-                if(value){ 
+                if (value) {
                     callback()
-                }else{
+                } else {
                     callback(new Error('请勾选同意用户协议'))
                 }
             }
@@ -32,15 +37,17 @@ const rules = {
 
 // 获取form实例做统一校验
 const formRef = ref(null)
-const doLogin =()=>{
-    formRef.value.validate((valid) => {
+const doLogin = () => {
+    const { account, password } = form.value
+    formRef.value.validate(async (valid) => {
         // vaild：所有表单都通过校验 ，为true
         console.log(valid);
         // 以vaild作为判断条件 如果通过校验才能执行登录逻辑
-        if(valid){
-            console.log('校验通过')
-        }else{
-            console.log('校验不通过')
+        if (valid) {
+            const res = await loginAPI({ account, password })
+            console.log(res);
+            ElMessage({type:'success',message:'登录成功'})
+            router.replace('/')
         }
     })
 }
@@ -68,7 +75,8 @@ const doLogin =()=>{
                 </nav>
                 <div class="account-box">
                     <div class="form">
-                        <el-form ref="formRef" :model="form" :rules="rules" label-position="right" label-width="60px" status-icon>
+                        <el-form ref="formRef" :model="form" :rules="rules" label-position="right" label-width="60px"
+                            status-icon>
                             <el-form-item label="账户" prop="account">
                                 <el-input v-model="form.account" />
                             </el-form-item>
