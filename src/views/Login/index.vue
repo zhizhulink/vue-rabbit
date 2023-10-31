@@ -47,6 +47,7 @@ const doLogin = () => {
         if (valid) {
             // TODO LOGIN
             await userStore.getUserInfo({account,password})
+            // console.log(userStore.userInfo);
             // 1、提示用户
             ElMessage({type:'success',message:'登录成功'})
             // 2.跳转首页
