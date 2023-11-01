@@ -30,7 +30,7 @@ const countChange = ()=>{
 
 // 添加购物车
 const addCart = () => {
-  if(skuObj.value.skuId){
+  if(skuObj.skuId){
     cartStore.addCart({
       id:goods.value.id,
       name:goods.value.name,
