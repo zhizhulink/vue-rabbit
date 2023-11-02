@@ -1,5 +1,5 @@
 <script setup>
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const useStore = useUserStore()
@@ -72,4 +72,4 @@ const confirm = ()=> {
     }
   }
 }
-</style>
+</style>@/stores/userStore

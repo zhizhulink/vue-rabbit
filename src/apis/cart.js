@@ -19,3 +19,14 @@ export const findNewCartAPI=()=>{
         url:'/member/cart',
     })
 }
+
+// 删除购物车
+export const delCartAPI=(skuId)=>{
+    return request({
+        url:'/member/cart',
+        method:'DELETE',
+        data:{
+            ids:[skuId]
+        }
+    })
+}
