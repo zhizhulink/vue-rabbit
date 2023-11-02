@@ -43,6 +43,10 @@ export const useCartStore = defineStore('cart', () => {
             item.selected = selected
         })
     }
+    // 已选择数量
+    const selectedCount = computed(()=>cartList.value.filter((item)=>item.selected).reduce((total,item)=>total+item.count,0))
+    // 已选择商品合计
+    const selectedPrice = computed(()=>cartList.value.filter((item)=>item.selected).reduce((total,item)=>total+item.count*item.price,0))
 
     // 计算属性
     // 1.总的数量 所有项的count之和
@@ -60,7 +64,9 @@ export const useCartStore = defineStore('cart', () => {
         allPrice,
         singleCheck,
         isAll,
-        allCheck
+        allCheck,
+        selectedCount,
+        selectedPrice
     }
 }, {
     persist: true,
