@@ -39,6 +39,7 @@ export const useCartStore = defineStore('cart', () => {
         }
 
     }
+
     // 删除购物车
     const delCart = async(skuId) => {
         if (isLogin.value) {
@@ -56,6 +57,11 @@ export const useCartStore = defineStore('cart', () => {
             cartList.value.splice(idx, 1)
         }
 
+    }
+
+    // 清除购物车
+    const clearCart = () => {
+        cartList.value = []
     }
 
     // 单选功能
@@ -94,7 +100,8 @@ export const useCartStore = defineStore('cart', () => {
         isAll,
         allCheck,
         selectedCount,
-        selectedPrice
+        selectedPrice,
+        clearCart
     }
 }, {
     persist: true,
