@@ -67,6 +67,10 @@ const router = createRouter({
             {
               path: 'order',
               component: UserOrder
+            },
+            {
+              path:'',
+              redirect:'member/user'
             }
           ]
         },
