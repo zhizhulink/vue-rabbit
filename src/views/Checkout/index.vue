@@ -1,7 +1,12 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { getCheckInfoAPI } from '@/apis/checkout'
+import { useRouter } from 'vue-router'
+import { createOrderAPI } from '@/apis/checkout'
+import { useCartStore } from '@/stores/cartStore'
 
+const cartStore = useCartStore()
+const router = useRouter()
 const checkInfo = ref({})  // 订单对象
 const curAddress = ref({})  // 默认地址
 const getCheckInfo = async () => {
@@ -16,19 +21,44 @@ const getCheckInfo = async () => {
 onMounted(() => getCheckInfo())
 
 // 控制弹框打开
-const showDialog =ref(false)
+const showDialog = ref(false)
 
-const activeAddress=ref({})
-const swithAddress =(item)=>{
+const activeAddress = ref({})
+const swithAddress = (item) => {
     activeAddress.value = item
 }
 
-const confirm =()=>{
-    curAddress.value=activeAddress.value
+const confirm = () => {
+    curAddress.value = activeAddress.value
     showDialog.value = false
     activeAddress.value = {}
 }
 
+const createOrder = async() => {
+    const res = await createOrderAPI({
+        deliveryTimeType: 1,
+        payType: 1,
+        payChannel: 1,
+        buyerMessage: '',
+        goods: checkInfo.value.goods.map(item => {
+              return {
+                skuId: item.skuId,
+                count: item.count
+            }
+        }),
+        addressId:curAddress.value.id
+    })
+    const orderId = res.result.id
+    router.push({
+        path: '/pay',
+        query: {
+            id: orderId
+        }
+    })
+
+    // 更新购物车
+    cartStore.updataNewList()
+}
 </script>
 
 <template>
@@ -123,7 +153,7 @@ const confirm =()=>{
                 </div>
                 <!-- 提交订单 -->
                 <div class="submit">
-                    <el-button type="primary" size="large">提交订单</el-button>
+                    <el-button type="primary" size="large" @click="createOrder">提交订单</el-button>
                 </div>
             </div>
         </div>
@@ -131,7 +161,8 @@ const confirm =()=>{
     <!-- 切换地址 -->
     <el-dialog v-model="showDialog" title="切换收货地址" width="30%" center>
         <div class="addressWrapper">
-            <div class="text item" :class="{active:activeAddress.id===item.id}"   @click="swithAddress(item)" v-for="item in checkInfo.userAddresses" :key="item.id">
+            <div class="text item" :class="{ active: activeAddress.id === item.id }" @click="swithAddress(item)"
+                v-for="item in checkInfo.userAddresses" :key="item.id">
                 <ul>
                     <li><span>收<i />货<i />人：</span>{{ item.receiver }} </li>
                     <li><span>联系方式：</span>{{ item.contact }}</li>
